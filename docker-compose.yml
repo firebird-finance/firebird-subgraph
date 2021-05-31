@@ -1,0 +1,5 @@
+version: '3'
+services:
+  graph-node:
+    environment:
+      ethereum: 'bscmainnet:https://bsc-dataseed.binance.org'

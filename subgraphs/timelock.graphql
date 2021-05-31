@@ -1,0 +1,31 @@
+
+type Timelock @entity {
+  id: ID!
+  root: Bytes
+  currentAdmin: Bytes # Optional
+  newPendingAdmin: Bytes # Optional
+  spells: [Spell!] @derivedFrom(field: "timelock")
+  delay: BigInt
+  gracePeriod: BigInt
+}
+
+type Spell @entity {
+  id: ID!            # Uses various unique representations (do not use tx hash; it will not be the same across lifecycle events)
+  description: String              # Optional
+  eta: BigInt!                     # Set to 0 if not applicable
+  createdAtTimestamp: BigInt!
+  createdAtTransaction: String!
+  expiresAtTimestamp: BigInt!      # Set to 0 if not applicable
+  value: BigInt!
+  functionName: String!            # Human-readable function name
+  signature: String                # Function signature (keccak hash)
+  data: String!                    # Prepend with 0x
+  target: Bytes!
+  timelock: Timelock!
+  isCancelled: Boolean!
+  isExecuted: Boolean!
+  cancelledAtTimestamp: BigInt     # Optional
+  cancelledAtTransaction: String   # Optional
+  executedAtTimestamp: BigInt      # Optional
+  executedAtTransaction: String    # Optional
+}

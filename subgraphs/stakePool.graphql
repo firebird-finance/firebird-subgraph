@@ -1,0 +1,101 @@
+
+
+type StakePoolShare @entity {
+  id: ID!                                             # stakeTokenId + userAddress + stakingPoolId
+  stakingPoolId: StakingPool!
+  userAddress: Bytes!
+  stakeBalance: BigDecimal!
+}
+
+type PaidReward @entity {
+  id: ID!                                             # stakingPoolId + RewardInfoIndex + userAddress
+  userAddress: Bytes!
+  stakingPoolId: StakingPool!
+  totalPaidReward: BigDecimal!                        #paid reward
+  totalPaidAmount: BigDecimal!                        #paid amount (after rebased)
+}
+
+
+type Token @entity {
+  id: ID!
+  symbol: String
+  name: String
+  decimals: Int!
+}
+
+
+type StakingFor @entity {
+  id: ID!
+  controllerId: Controller!
+  controllerAddress: Bytes!
+}
+
+type RewardRebaser @entity {
+  id: ID!
+  controllerId: Controller!
+  controllerAddress: Bytes!
+  rewardInfos: [RewardInfo!] @derivedFrom(field: "rewardRebaserId")
+}
+
+type RewardMultiplier @entity {
+  id: ID!
+  controllerId: Controller!
+  controllerAddress: Bytes!
+  rewardInfos: [RewardInfo!] @derivedFrom(field: "rewardMultiplierId")
+}
+
+type Controller @entity {
+  id: ID!
+  type: String!
+  address: Bytes!
+  whitelistStakingFor: [StakingFor!] @derivedFrom(field: "controllerId")
+  whitelistRewardRebaser: [RewardRebaser!] @derivedFrom(field: "controllerId")
+  whitelistRewardMultiplier: [RewardMultiplier!] @derivedFrom(field: "controllerId")
+  stakingPools: [StakingPool!] @derivedFrom(field: "controllerId")
+  stakingPoolCount: Int!
+  governance: Bytes!
+}
+
+type StakingPool @entity {
+  id: ID!
+  stakeToken: Token!
+  shares: [StakePoolShare!] @derivedFrom(field: "stakingPoolId")
+  totalStakedShare: BigDecimal!
+  version: Int!
+  faaSRewardFund: Bytes!
+  rewardInfos: [RewardInfo]! @derivedFrom(field: "stakingPoolId")
+  timelockId: Bytes!
+  whitelistState: Int
+  controllerAddress: Bytes!
+  controllerId: Controller!
+  type: String!
+  creatorAddress: Bytes!
+}
+
+type RewardInfo @entity {
+  id: ID!                                               # stakingPoolId + index
+  stakingPoolId: StakingPool!
+  rewardToken: Token!
+  rewardRebaserId : RewardRebaser
+  rewardMultiplierId : RewardMultiplier
+  startRewardBlock : BigDecimal!
+  lastRewardBlock : BigDecimal!
+  endRewardBlock : BigDecimal!
+  rewardPerBlock : BigDecimal!
+  accRewardPerShare : BigDecimal!
+  lockRewardPercent : BigDecimal!
+  startVestingBlock : BigDecimal!
+  endVestingBlock : BigDecimal!
+  numOfVestingBlocks : BigDecimal!
+  totalPaidRewards : BigDecimal!
+}
+
+type StakeMovement @entity {
+  id: ID!                                             # txn hash + log index
+  stakeToken: Token!
+  stakingPoolId: StakingPool
+  amount: BigDecimal!
+  userAddress: Bytes!
+  tx: Bytes!
+  type: Int!                                          # 0: deposit, 1: withdraw
+}

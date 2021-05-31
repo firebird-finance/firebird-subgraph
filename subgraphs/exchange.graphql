@@ -1,0 +1,159 @@
+type Exchange @entity {
+  id: ID!
+  poolCount: Int!                                     # Number of pools
+  pools: [PoolInfo!] @derivedFrom(field: "exchangeID")
+  txCount: BigInt!                                    # Number of txs
+  totalLiquidity: BigDecimal!                         # All the pools liquidity value in USD
+  protocolFee: BigDecimal!                         # All the pools liquidity value in USD
+  totalSwapVolume: BigDecimal!                        # All the swap volume in USD
+  totalSwapFee: BigDecimal!                           # All the swap fee in USD
+  totalProtocolFee: BigDecimal!
+}
+
+type PoolInfo @entity {
+  id: ID!                                             # Pool address
+  swapFee: BigDecimal!                                # Swap Fees
+  totalWeight: BigDecimal!
+  tokensList: [Bytes!]!                               # Temp workaround until graph supports filtering on derived field
+  createTime: Int!                                    # Block time pool was created
+  tokensCount: BigInt!                                # Number of tokens in the pool
+  exchangeID: Exchange!
+  poolId: Pool!
+  tx: Bytes                                           # Pool creation transaction id
+  creatorAddress: User!
+  timelock: Bytes
+  lpAddress: LPPoolToken
+  withdrawFee: BigDecimal
+  adminFee: BigDecimal!
+}
+
+type Pool @entity {
+  id: ID!                                             # Pool address
+  version: Int!
+  totalShares: BigDecimal!                            # Total pool token shares
+  totalSwapVolume: BigDecimal!                        # Total swap volume in USD
+  totalSwapFee: BigDecimal!                           # Total swap fee in USD
+  liquidity: BigDecimal!                              # Pool liquidity value in USD
+  tokens: [PoolToken!] @derivedFrom(field: "poolId")
+  shares: [PoolShare!] @derivedFrom(field: "poolId")
+  poolInfo: PoolInfo! @derivedFrom(field: "poolId")
+  holdersCount: BigInt!                               # Number of addresses holding a positive balance of BPT
+  txCount: BigInt!                                 # liquidity has been added
+  swaps: [Swap!] @derivedFrom(field: "poolAddress")
+}
+
+type LPPoolToken @entity {
+  id: ID!
+  poolId: Pool!
+  symbol: String
+  name: String
+  decimals: Int
+}
+
+type PoolToken @entity {
+  id: ID!                                             # poolId + token address
+  poolId: Pool!
+  symbol: String
+  name: String
+  decimals: Int!
+  address: String!
+  balance: BigDecimal!
+  reserveUSD: BigDecimal!
+  denormWeight: BigDecimal!
+  priceUSD: BigDecimal!
+  tokenIndex: Int
+}
+
+type PoolShare @entity {
+  id: ID!                                             # poolId + userAddress
+  userAddress: User!
+  poolId: Pool!
+  balance: BigDecimal!
+}
+
+type User @entity {
+  id: ID!
+  sharesOwned: [PoolShare!]  @derivedFrom(field: "userAddress")
+  swaps: [Swap!]  @derivedFrom(field: "userAddress")
+  poolCreate: [PoolInfo!] @derivedFrom(field: "creatorAddress")
+}
+
+type Swap @entity {
+    id: ID!                                 #
+    caller: Bytes!                          #
+    tx: Bytes!                          #
+    tokensList: [Bytes!]!
+    tokenIn: Bytes!                         #
+    tokenInSym: String!                     #
+    tokenOut: Bytes!                        #
+    tokenOutSym: String!                    #
+    tokenAmountIn: BigDecimal!              #
+    tokenAmountOut: BigDecimal!             #
+    poolAddress: Pool
+    userAddress: User                       # User address that initiates the swap
+    value: BigDecimal!                      # Swap value in USD
+    feeValue: BigDecimal!                   # Swap fee value in USD
+    protocolFeeValue: BigDecimal!                   # Swap fee value in USD
+    timestamp: Int!
+}
+
+type Token @entity {
+  id: ID!
+  symbol: String
+  name: String
+  decimals: Int!
+  priceUSD: BigDecimal!
+  poolLiquidity: BigDecimal!
+  isVpeg: Boolean
+  poolTokenId: String
+  totalLiquidity: BigDecimal!
+  tradeVolume : BigDecimal!
+  tradeVolumeUSD: BigDecimal!
+  totalProtocolFee: BigDecimal!
+  txCount: BigInt!
+}
+
+# Data accumulated and condensed into day stats for all of Uniswap
+type ExchangeDayData @entity {
+  id: ID! # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  exchangeID: Exchange!
+  dailyVolumeUSD: BigDecimal!
+  dailyFeeUSD: BigDecimal!
+  dailyProtocolFeeUSD: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalVolumeUSD: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  txCount: BigInt!
+}
+
+# Data accumulated and condensed into day stats for each exchange
+type PoolDayData @entity {
+  id: ID!
+  date: Int!
+  poolAddress: Bytes!
+  totalShares: BigDecimal!
+  liquidity: BigDecimal!
+  dailyVolumeUSD: BigDecimal!
+  dailyFeeUSD: BigDecimal!
+  dailyProtocolFeeUSD: BigDecimal!
+  dailyTxns: BigInt!
+}
+
+type TokenDayData @entity {
+  id: ID!
+  date: Int!
+  tokenId: Bytes!
+  # volume stats
+  dailyVolumeToken: BigDecimal!
+  dailyVolumeUSD: BigDecimal!
+  totalProtocolFee: BigDecimal!
+  dailyTxns: BigInt!
+
+  # liquidity stats
+  totalLiquidityToken: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+
+  # price stats
+  priceUSD: BigDecimal!
+}

@@ -1,0 +1,83 @@
+specVersion: 0.0.2
+description: TimeLock
+repository: https://github.com/firebird-finance/firebird-subgraph
+schema:
+  file: ./timelock.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: StakePoolController
+    network: {{network}}
+    source:
+      address: '{{stakePoolController.address}}'
+      abi: StakePoolController
+      startBlock: {{stakePoolController.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/timelock/factory.ts
+      entities:
+        - Timelock
+      abis:
+        - name: StakePoolController
+          file: ../abis/StakePoolController.json
+        - name: TimeLock
+          file: ../abis/TimeLock.json
+      eventHandlers:
+        - event: MasterCreated(indexed address,indexed address,uint256,address,address,uint256)
+          handler: handleMasterCreated
+  - kind: ethereum/contract
+    name: StableFactory
+    network: {{network}}
+    source:
+      address: '{{stableFactory.address}}'
+      abi: SwapFactory
+      startBlock: {{stableFactory.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/timelock/factory.ts
+      entities:
+        - Timelock
+      abis:
+        - name: SwapFactory
+          file: ../abis/SwapFactory.json
+        - name: Swap
+          file: ../abis/Swap.json
+        - name: TimeLock
+          file: ../abis/TimeLock.json
+      eventHandlers:
+        - event: SwapCreated(address[],indexed address,uint256)
+          handler: handleNewStableSwap
+templates:
+  - kind: ethereum/contract
+    name: Timelock
+    network: {{network}}
+    source:
+      abi: Timelock
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/timelock/timeLock.ts
+      entities:
+        - Timelock
+        - Spell
+        - Target
+      abis:
+        - name: Timelock
+          file: ../abis/TimeLock.json
+      eventHandlers:
+        - event: CancelTransaction(indexed bytes32,indexed address,uint256,string,bytes,uint256)
+          handler: handleCancelTransaction
+        - event: ExecuteTransaction(indexed bytes32,indexed address,uint256,string,bytes,uint256)
+          handler: handleExecuteTransaction
+        - event: NewAdmin(indexed address)
+          handler: handleNewAdmin
+        - event: NewDelay(indexed uint256)
+          handler: handleNewDelay
+        - event: NewPendingAdmin(indexed address)
+          handler: handleNewPendingAdmin
+        - event: QueueTransaction(indexed bytes32,indexed address,uint256,string,bytes,uint256)
+          handler: handleQueueTransaction

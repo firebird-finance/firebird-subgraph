@@ -1,0 +1,11 @@
+type RouterExchange @entity {
+  id: ID!                                             # txn hash + log index
+  pair: Bytes!
+  token: Bytes!
+  amount: BigDecimal!
+  userAddress: Bytes!
+  time: BigInt,
+  blockNumber: BigInt,
+  tx: Bytes!
+}
+

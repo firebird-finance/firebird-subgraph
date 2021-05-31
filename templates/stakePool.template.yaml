@@ -1,0 +1,82 @@
+specVersion: 0.0.2
+description: StakePool
+repository: https://github.com/firebird-finance/firebird-subgraph
+schema:
+  file: ./stakePool.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: StakePoolController
+    network: {{network}}
+    source:
+      address: '{{ stakePoolController.address }}'
+      abi: StakePoolController
+      startBlock: {{ stakePoolController.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/stakePool/stakePoolController.ts
+      entities:
+        - Controller
+        - StakingPool
+        - StakingFor
+        - RewardRebaser
+        - RewardMultiplier
+      abis:
+        - name: StakePoolController
+          file: ../abis/StakePoolController.json
+        - name: StakePool
+          file: ../abis/StakePool.json
+        - name: BToken
+          file: ../abis/BToken.json
+        - name: BTokenBytes
+          file: ../abis/BTokenBytes32.json
+      eventHandlers:
+        - event: MasterCreated(indexed address,indexed address,uint256,address,address,uint256)
+          handler: handleMasterCreated
+        - event: SetWhitelistStakingFor(indexed address,bool)
+          handler: handleSetWhitelistStakingFor
+        - event: SetWhitelistRewardRebaser(indexed address,bool)
+          handler: handleSetWhitelistRewardRebaser
+        - event: SetWhitelistRewardMultiplier(indexed address,bool)
+          handler: handleSetWhitelistRewardMultiplier
+        - event: SetWhitelistStakePool(indexed address,int8)
+          handler: handleSetWhitelistStakePool
+        - event: ChangeGovernance(indexed address)
+          handler: handleChangeGovernance
+templates:
+  - kind: ethereum/contract
+    name: StakePool
+    network: {{network}}
+    source:
+      abi: StakePool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/stakePool/stakePool.ts
+      entities:
+        - RewardInfo
+        - PaidReward
+        - PoolShare
+      abis:
+        - name: StakePool
+          file: ../abis/StakePool.json
+        - name: BToken
+          file: ../abis/BToken.json
+      eventHandlers:
+        - event: AddRewardPool(indexed uint256)
+          handler: handleAddRewardPool
+        - event: UpdateRewardPool(indexed uint256,uint256,uint256)
+          handler: handleUpdateRewardPool
+        - event: UpdateRewardRebaser(indexed uint256,address)
+          handler: handleUpdateRewardRebaser
+        - event: UpdateRewardMultiplier(indexed uint256,address)
+          handler: handleUpdateRewardMultiplier
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: PayRewardPool(indexed uint256,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handlePayRewardPool
+

@@ -1,0 +1,23 @@
+{
+  "network": "bsc",
+
+  "liquidFactory": {
+    "address": "0x5De74546d3B86C8Df7FEEc30253865e1149818C8",
+    "startBlock": "7883044"
+  },
+
+  "stableFactory": {
+    "address": "0xD2891F9a9fDBFfC2DB3Ec9D4194409a7678CBc51",
+    "startBlock": "7883140"
+  },
+
+  "router": {
+    "address": "0x4BFBf7fCC9776CE8285B059fB77e7Bb2A5c5E365",
+    "startBlock": "7883052"
+  },
+
+  "stakePoolController": {
+    "address": "0xbadc009227A5Fe0b423B994669Dd68D0D3Cc722c",
+    "startBlock": "7883087"
+  }
+}

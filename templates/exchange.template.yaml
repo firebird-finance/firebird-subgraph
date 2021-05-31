@@ -1,0 +1,155 @@
+specVersion: 0.0.2
+description: Exchange
+repository: https://github.com/firebird-finance/firebird-subgraph
+schema:
+  file: ./exchange.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: FactoryV2
+    network: {{network}}
+    source:
+      address: '{{ liquidFactory.address }}'
+      abi: UFactory
+      startBlock: {{ liquidFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/exchange/factory.ts
+      entities:
+        - Exchange
+        - Pool
+      abis:
+        - name: UFactory
+          file: ../abis/factory.json
+        - name: UniswapFactory
+          file: ../abis/UniswapFactory.json
+        - name: BToken
+          file: ../abis/BToken.json
+        - name: BTokenBytes
+          file: ../abis/BTokenBytes32.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint32,uint32,uint256)
+          handler: handleNewPair
+  - kind: ethereum/contract
+    name: StableFactory
+    network: {{network}}
+    source:
+      address: '{{ stableFactory.address }}'
+      abi: SwapFactory
+      startBlock: {{ stableFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/exchange/factory.ts
+      entities:
+        - Exchange
+        - Pool
+        - Timelock
+      abis:
+        - name: SwapFactory
+          file: ../abis/SwapFactory.json
+        - name: BToken
+          file: ../abis/BToken.json
+        - name: BTokenBytes
+          file: ../abis/BTokenBytes32.json
+        - name: Swap
+          file: ../abis/Swap.json
+        - name: TimeLock
+          file: ../abis/TimeLock.json
+      eventHandlers:
+        - event: SwapCreated(address[],indexed address,uint256)
+          handler: handleNewStableSwap
+templates:
+  - kind: ethereum/contract
+    name: PairV2
+    network: {{network}}
+    source:
+      abi: PairV2
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/exchange/pair.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: PairV2
+          file: ../abis/pair.json
+        - name: UFactory
+          file: ../abis/factory.json
+      eventHandlers:
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256,uint256,indexed address)
+          handler: handleBurn
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: TransferProtocolFee(indexed address,uint256)
+          handler: handleTransferProtocolFee
+  - kind: ethereum/contract
+    name: StableSwap
+    network: {{network}}
+    source:
+      abi: Swap
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/exchange/stableSwap.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Swap
+          file: ../abis/Swap.json
+        - name: BToken
+          file: ../abis/BToken.json
+      eventHandlers:
+        - event: AddLiquidity(indexed address,uint256[],uint256[],uint256,uint256)
+          handler: handleAddLiquidity
+        - event: RemoveLiquidity(indexed address,uint256[],uint256)
+          handler: handleRemoveLiquidity
+        - event: RemoveLiquidityOne(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleRemoveLiquidityOne
+        - event: RemoveLiquidityImbalance(indexed address,uint256[],uint256[],uint256,uint256)
+          handler: handleRemoveLiquidityImbalance
+        - event: TokenSwap(indexed address,uint256,uint256,uint128,uint128)
+          handler: handleTokenSwap
+        - event: CollectProtocolFee(address,uint256)
+          handler: handleCollectProtocolFee
+        - event: NewSwapFee(uint256)
+          handler: handleNewSwapFee
+        - event: NewWithdrawFee(uint256)
+          handler: handleNewWithdrawFee
+        - event: NewAdminFee(uint256)
+          handler: handleNewAdminFee
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+  - kind: ethereum/contract
+    name: StableLP
+    network: {{network}}
+    source:
+      abi: LPToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/exchange/stableSwap.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: LPToken
+          file: ../abis/LPToken.json
+        - name: BToken
+          file: ../abis/BToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer

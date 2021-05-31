@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+description: Router
+repository: https://github.com/firebird-finance/firebird-subgraph
+schema:
+  file: ./router.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Router
+    network: {{network}}
+    source:
+      address: '{{router.address}}'
+      abi: Router
+      startBlock: {{router.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/router/router.ts
+      entities:
+        - RouterExchange
+      abis:
+        - name: Router
+          file: ../abis/LiquidRouter.json
+      eventHandlers:
+        - event: Exchange(address,uint256,address)
+          handler: handleExchange
