@@ -8,15 +8,6 @@ export let ONE_BD = BigDecimal.fromString("1");
 export let BI_18 = BigInt.fromI32(18);
 let network = dataSource.network();
 
-export let WETH: string = "0x2170ed0880ac9a755fd29b2688956bd959f933f8";
-export let VALUE: string = "0x4f0ed527e8a95ecaa132af214dfd41f30b361600";
-export let USD: string = "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"; // USDC
-export let USDT: string = "0x55d398326f99059ff775485246999027b3197955"; // USDT
-export let DAI: string = "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3"; // DAI
-export let WBNB: string = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
-export let BUSD: string = "0xe9e7cea3dedca5984780bafc599bd69add087d56"; // BUSD
-
-
 export function hexToDecimal(hexString: string, decimals: i32): BigDecimal {
   let bytes = Bytes.fromHexString(hexString).reverse() as Bytes;
   let bi = BigInt.fromUnsignedBytes(bytes);
