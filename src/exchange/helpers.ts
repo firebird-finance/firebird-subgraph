@@ -15,8 +15,9 @@ export let USD: string = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"; // USDC
 export let USDT: string = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"; // USDT
 export let DAI: string = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; // DAI
 export let MATIC: string = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
+export let WETH: string = "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619";
 export let STABLES: string[] = [DAI, USD, USDT];
-export let WHITELIST: string[] = [HOPE, MATIC, DAI, USD, USDT];
+export let WHITELIST: string[] = [HOPE, WETH, MATIC, DAI, USD, USDT];
 export let SAVE_SWAP_FROM = BigInt.fromI32(0);
 export function getExchange(id: string): Exchange | null {
   let factory = Exchange.load(id);
@@ -29,7 +30,7 @@ export function getExchange(id: string): Exchange | null {
     factory.totalSwapVolume = ZERO_BD;
     factory.totalSwapFee = ZERO_BD;
     factory.totalProtocolFee = ZERO_BD;
-    factory.save()
+    factory.save();
   }
   return factory;
 }
@@ -272,6 +273,17 @@ export function updatePoolLiquidity(pool: Pool): void {
         .times(poolInfo.totalWeight);
       hasPrice = true;
     }
+  } else if (tokensList.includes(Address.fromString(WETH))) {
+    let wethToken = Token.load(WETH);
+    if (wethToken !== null && wethToken.priceUSD.gt(ZERO_BD)) {
+      let poolTokenId = id.concat("-").concat(WETH);
+      let poolToken = PoolToken.load(poolTokenId);
+      poolLiquidity = wethToken.priceUSD
+        .times(poolToken.balance)
+        .div(poolToken.denormWeight)
+        .times(poolInfo.totalWeight);
+      hasPrice = true;
+    }
   }
 
   // Create or update token price
@@ -279,7 +291,8 @@ export function updatePoolLiquidity(pool: Pool): void {
   let denormWeight = ZERO_BD;
 
   let poolTokens: Array<PoolToken> = [];
-  let isPoolNativeStable = tokensList.includes(Address.fromString(MATIC)) && tokensList.includes(Address.fromString(USDT)); //only update MATIC by pool MATIC-USDT
+  let isPoolMaticStable = tokensList.includes(Address.fromString(MATIC)) && tokensList.includes(Address.fromString(USD)); //only update MATIC by pool MATIC-USDC
+  let isPoolWETHStable = tokensList.includes(Address.fromString(WETH)) && tokensList.includes(Address.fromString(USD)); //only update WETH by pool WETH-USDC
   let tokens: Array<Token> = [];
   for (let i: i32 = 0; i < tokensList.length; i++) {
     let tokenId = tokensList[i].toHexString();
@@ -291,15 +304,20 @@ export function updatePoolLiquidity(pool: Pool): void {
         (token.poolTokenId == poolTokenId || poolLiquidity.gt(token.poolLiquidity)) &&
         (tokenId != HOPE.toString() || (poolInfo.tokensCount.equals(BigInt.fromI32(2)) && hasUsdPrice))
       ) {
-        if (((isPoolNativeStable && tokenId == MATIC.toString()) || tokenId != MATIC.toString()) && poolLiquidity.gt(MIN_LIQUIDITY_BD)) {
-          if (poolToken.balance.gt(ZERO_BD) && !STABLES.includes(tokenId)) {
-            token.priceUSD = poolLiquidity
-              .div(poolInfo.totalWeight)
-              .times(poolToken.denormWeight)
-              .div(poolToken.balance);
+        if (
+          (tokenId != MATIC.toString() || (tokenId == MATIC.toString() && isPoolMaticStable)) &&
+          (tokenId != WETH.toString() || (tokenId == WETH.toString() && isPoolWETHStable))
+        ) {
+          if (poolLiquidity.gt(MIN_LIQUIDITY_BD)) {
+            if (poolToken.balance.gt(ZERO_BD) && !STABLES.includes(tokenId)) {
+              token.priceUSD = poolLiquidity
+                .div(poolInfo.totalWeight)
+                .times(poolToken.denormWeight)
+                .div(poolToken.balance);
+            }
+            token.poolLiquidity = poolLiquidity;
+            token.poolTokenId = poolTokenId;
           }
-          token.poolLiquidity = poolLiquidity;
-          token.poolTokenId = poolTokenId;
         }
       }
     } else if (poolToken.denormWeight.gt(denormWeight) && token.priceUSD.gt(ZERO_BD)) {

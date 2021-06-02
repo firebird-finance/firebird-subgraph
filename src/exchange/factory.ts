@@ -23,7 +23,7 @@ export function handleNewPair(event: PairCreated): void {
   let exchange = getExchange("1");
   let factoryContract = UFactoryContract.bind(event.address);
   let protocolFee = factoryContract.protocolFee().toBigDecimal();
-  exchange.protocolFee = ONE_BD.div(protocolFee.div(BigDecimal.fromString("1000")));
+  exchange.protocolFee = ONE_BD.div(protocolFee.div(BigDecimal.fromString("10000")));
   exchange.poolCount = exchange.poolCount + 1;
   exchange.save();
 
@@ -70,7 +70,7 @@ export function handleNewPair(event: PairCreated): void {
 
   //save poolInfo v2
   let poolInfo = new PoolInfo(event.params.pair.toHexString());
-  poolInfo.swapFee = tokenToDecimal(event.params.swapFee.toBigDecimal(), 3);
+  poolInfo.swapFee = tokenToDecimal(event.params.swapFee.toBigDecimal(), 4);
   poolInfo.adminFee = ZERO_BD;
   poolInfo.totalWeight = BigDecimal.fromString("100");
   poolInfo.tokensList = tokensList;
