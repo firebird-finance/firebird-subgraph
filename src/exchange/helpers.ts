@@ -1,16 +1,16 @@
-import { BigDecimal, Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { Pool, User, PoolToken, PoolShare, Token, Exchange, PoolInfo } from "../types/exchange/schema";
-import { BToken } from "../types/exchange/FactoryV2/BToken";
-import { BTokenBytes } from "../types/exchange/FactoryV2/BTokenBytes";
+import {BigDecimal, Address, BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
+import {Pool, User, PoolToken, PoolShare, Token, Exchange, PoolInfo} from "../types/exchange/schema";
+import {BToken} from "../types/exchange/FactoryV2/BToken";
+import {BTokenBytes} from "../types/exchange/FactoryV2/BTokenBytes";
 
 export let ZERO_BD = BigDecimal.fromString("0");
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
 export let ONE_BD = BigDecimal.fromString("1");
-export let MIN_LIQUIDITY_BD = BigDecimal.fromString("200");
+export let MIN_LIQUIDITY_BD = BigDecimal.fromString("1");
 export let MIN_RESERVE_UPDATE_BD = BigDecimal.fromString("10");
 
-export let HOPE: string = "0x4f0ed527e8a95ecaa132af214dfd41f30b361600";
+export let HOPE: string = "0xd78c475133731cd54dadcb430f7aae4f03c1e660";
 export let USD: string = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"; // USDC
 export let USDT: string = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"; // USDT
 export let DAI: string = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; // DAI
@@ -251,17 +251,6 @@ export function updatePoolLiquidity(pool: Pool): void {
     poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
     hasPrice = true;
     hasUsdPrice = true;
-  } else if (tokensList.includes(Address.fromString(HOPE))) {
-    let hopeToken = Token.load(HOPE);
-    if (hopeToken !== null && hopeToken.priceUSD.gt(ZERO_BD)) {
-      let poolTokenId = id.concat("-").concat(HOPE);
-      let poolToken = PoolToken.load(poolTokenId);
-      poolLiquidity = hopeToken.priceUSD
-        .times(poolToken.balance)
-        .div(poolToken.denormWeight)
-        .times(poolInfo.totalWeight);
-      hasPrice = true;
-    }
   } else if (tokensList.includes(Address.fromString(MATIC))) {
     let maticToken = Token.load(MATIC);
     if (maticToken !== null && maticToken.priceUSD.gt(ZERO_BD)) {
@@ -284,6 +273,17 @@ export function updatePoolLiquidity(pool: Pool): void {
         .times(poolInfo.totalWeight);
       hasPrice = true;
     }
+  } else if (tokensList.includes(Address.fromString(HOPE))) {
+    let hopeToken = Token.load(HOPE);
+    if (hopeToken !== null && hopeToken.priceUSD.gt(ZERO_BD)) {
+      let poolTokenId = id.concat("-").concat(HOPE);
+      let poolToken = PoolToken.load(poolTokenId);
+      poolLiquidity = hopeToken.priceUSD
+        .times(poolToken.balance)
+        .div(poolToken.denormWeight)
+        .times(poolInfo.totalWeight);
+      hasPrice = true;
+    }
   }
 
   // Create or update token price
@@ -300,10 +300,7 @@ export function updatePoolLiquidity(pool: Pool): void {
     let poolTokenId = id.concat("-").concat(tokenId);
     let poolToken = PoolToken.load(poolTokenId);
     if (hasPrice) {
-      if (
-        (token.poolTokenId == poolTokenId || poolLiquidity.gt(token.poolLiquidity)) &&
-        (tokenId != HOPE.toString() || (poolInfo.tokensCount.equals(BigInt.fromI32(2)) && hasUsdPrice))
-      ) {
+      if (token.poolTokenId == poolTokenId || poolLiquidity.gt(token.poolLiquidity)) {
         if (
           (tokenId != MATIC.toString() || (tokenId == MATIC.toString() && isPoolMaticStable)) &&
           (tokenId != WETH.toString() || (tokenId == WETH.toString() && isPoolWETHStable))

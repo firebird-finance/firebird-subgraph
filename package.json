@@ -6,6 +6,7 @@
     "exchange:codegen": "graph codegen subgraphs/exchange.thegraph.yaml --output-dir src/types/exchange",
     "exchange:build": "graph build subgraphs/exchange.thegraph.yaml",
     "thegraph:exchange:deploy": "graph deploy firebirdgraph/polygon-exchange subgraphs/exchange.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "thegraph:exchange:deploy-ba": "graph deploy firebirdgraph/polygon-exchange-2 subgraphs/exchange.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "bscgraph:exchange:deploy": "graph deploy firebird/exchange-new subgraphs/exchange.bscgraph.yaml --ipfs https://ipfs.infura.io:5001/ --node https://api.bscgraph.org/deploy/",
 
     "thegraph:stakePool:mustache": "mustache src/config/thegraph-matic.json templates/stakePool.template.yaml > subgraphs/stakePool.thegraph.yaml",
@@ -17,7 +18,7 @@
     "thegraph:router:mustache": "mustache src/config/thegraph-matic.json templates/router.template.yaml > subgraphs/router.thegraph.yaml",
     "router:codegen": "graph codegen subgraphs/router.thegraph.yaml --output-dir src/types/router",
     "router:build": "graph build subgraphs/router.thegraph.yaml",
-    "thegraph:router:deploy": "graph deploy firebirdgraph/exchange-router subgraphs/router.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "thegraph:router:deploy": "graph deploy firebirdgraph/polygon-exchange-log subgraphs/router.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
 
     "thegraph:timelock:mustache": "mustache src/config/thegraph-matic.json templates/timelock.template.yaml > subgraphs/timelock.thegraph.yaml",
     "timelock:codegen": "graph codegen subgraphs/timelock.thegraph.yaml --output-dir src/types/timelock",
