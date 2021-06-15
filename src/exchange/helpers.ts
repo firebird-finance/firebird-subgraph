@@ -10,7 +10,7 @@ export let ONE_BD = BigDecimal.fromString("1");
 export let MIN_LIQUIDITY_BD = BigDecimal.fromString("1");
 export let MIN_RESERVE_UPDATE_BD = BigDecimal.fromString("10");
 
-export let HOPE: string = "0x645695d8B5693D806Af33Dfc82eb15D4Cc0a4a59";
+export let HOPE: string = "0x645695d8b5693d806af33dfc82eb15d4cc0a4a59";
 export let USD: string = "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"; // USDC
 export let USDT: string = "0x55d398326f99059ff775485246999027b3197955"; // USDT
 export let DAI: string = "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3"; // DAI
@@ -299,7 +299,7 @@ export function updatePoolLiquidity(pool: Pool): void {
 
   let poolTokens: Array<PoolToken> = [];
   let isPoolMaticStable = tokensList.includes(Address.fromString(WBNB)) && tokensList.includes(Address.fromString(USD)); //only update MATIC by pool MATIC-USDC
-  let isPoolWETHStable = tokensList.includes(Address.fromString(WETH)) && tokensList.includes(Address.fromString(USD)); //only update WETH by pool WETH-USDC
+  let isPoolWETHStable = tokensList.includes(Address.fromString(WETH)) && tokensList.includes(Address.fromString(WBNB)); //only update WETH by pool WETH-BNB
   let tokens: Array<Token> = [];
   for (let i: i32 = 0; i < tokensList.length; i++) {
     let tokenId = tokensList[i].toHexString();
