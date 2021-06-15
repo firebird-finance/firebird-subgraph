@@ -1,21 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_swapFactory",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_swapRouter",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -40,7 +24,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "pair",
+        "name": "stakeToken",
         "type": "address"
       },
       {
@@ -69,6 +53,96 @@
       }
     ],
     "name": "MasterCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetExtraFeeRate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetFeeAmount",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "feeCollector",
+        "type": "address"
+      }
+    ],
+    "name": "SetFeeCollector",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "SetFeeToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "verion",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetStakePoolCreator",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "value",
+        "type": "bool"
+      }
+    ],
+    "name": "SetStakePoolVerifier",
     "type": "event"
   },
   {
@@ -150,6 +224,38 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "_stakePoolVerifiers",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "addStakePoolCreator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -183,8 +289,42 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "pair",
+        "name": "",
         "type": "address"
+      }
+    ],
+    "name": "allowEmergencyWithdrawStakePools",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "version",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "stakeToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "rewardToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardFundAmount",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -192,71 +332,9 @@
         "type": "uint256"
       },
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "rewardToken",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "rewardRebaser",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "rewardMultiplier",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endRewardBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "rewardPerBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lockRewardPercent",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startVestingBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endVestingBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "unstakingFrozenTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "rewardFundAmount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IStakePoolController.PoolRewardInfo",
-        "name": "poolRewardInfo",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint8",
-        "name": "flag",
-        "type": "uint8"
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
       }
     ],
     "name": "create",
@@ -271,101 +349,60 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "enableWhitelistRewardMultiplier",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "tokenA",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "tokenB",
-        "type": "address"
-      },
-      {
-        "internalType": "uint32",
-        "name": "tokenWeightA",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint32",
-        "name": "swapFee",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "delayTimeLock",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "rewardToken",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "rewardRebaser",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "rewardMultiplier",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endRewardBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "rewardPerBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lockRewardPercent",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startVestingBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endVestingBlock",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "unstakingFrozenTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "rewardFundAmount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IStakePoolController.PoolRewardInfo",
-        "name": "poolRewardInfo",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint8",
-        "name": "flag",
-        "type": "uint8"
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
-    "name": "createPair",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "enableWhitelistRewardRebaser",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "extraFeeRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeCollector",
     "outputs": [
       {
         "internalType": "address",
@@ -373,7 +410,39 @@
         "type": "address"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getCreationFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -393,11 +462,62 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_swapFactory",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "isAllowEmergencyWithdrawStakePool",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "b",
         "type": "address"
       }
     ],
     "name": "isStakePool",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "isStakePoolVerifier",
     "outputs": [
       {
         "internalType": "bool",
@@ -485,16 +605,99 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "router",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "state",
+        "type": "bool"
+      }
+    ],
+    "name": "setAllowEmergencyWithdrawStakePool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "value",
+        "type": "bool"
+      }
+    ],
+    "name": "setEnableWhitelistRewardMultiplier",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "value",
+        "type": "bool"
+      }
+    ],
+    "name": "setEnableWhitelistRewardRebaser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extraFeeRate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setExtraFeeRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_feeAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFeeAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "setFeeCollector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "setFeeToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -514,24 +717,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_router",
+        "name": "_address",
         "type": "address"
-      }
-    ],
-    "name": "setRouter",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
-        "internalType": "address",
-        "name": "_stakePoolCreator",
-        "type": "address"
+        "internalType": "bool",
+        "name": "state",
+        "type": "bool"
       }
     ],
-    "name": "setStakePoolCreator",
+    "name": "setStakePoolVerifier",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -609,11 +804,17 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "stakePoolCreator",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "stakePoolCreators",
     "outputs": [
       {
-        "internalType": "contract IStakePoolCreator",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -626,7 +827,7 @@
     "name": "swapFactory",
     "outputs": [
       {
-        "internalType": "contract IUniswapV2Factory",
+        "internalType": "contract IIsPair",
         "name": "",
         "type": "address"
       }
