@@ -33,15 +33,15 @@ export function handleAddRewardPool(event: AddRewardPool): void {
     rewardInfo.rewardToken = rewardTokenAddress;
     rewardInfo.rewardRebaserId = rewardInfoCall.value.value1.toHexString();
     rewardInfo.rewardMultiplierId = rewardInfoCall.value.value2.toHexString();
-    rewardInfo.startRewardBlock = rewardInfoCall.value.value3.toBigDecimal();
-    rewardInfo.lastRewardBlock = rewardInfoCall.value.value4.toBigDecimal();
-    rewardInfo.endRewardBlock = rewardInfoCall.value.value5.toBigDecimal();
-    rewardInfo.rewardPerBlock = tokenToDecimal(rewardInfoCall.value.value6.toBigDecimal(), rewardToken.decimals);
+    rewardInfo.startRewardTime = rewardInfoCall.value.value3.toBigDecimal();
+    rewardInfo.lastRewardTime = rewardInfoCall.value.value4.toBigDecimal();
+    rewardInfo.endRewardTime = rewardInfoCall.value.value5.toBigDecimal();
+    rewardInfo.rewardPerSecond = tokenToDecimal(rewardInfoCall.value.value6.toBigDecimal(), rewardToken.decimals);
     rewardInfo.accRewardPerShare = tokenToDecimal(rewardInfoCall.value.value7.toBigDecimal(), rewardToken.decimals);
     rewardInfo.lockRewardPercent = rewardInfoCall.value.value8.toBigDecimal();
-    rewardInfo.startVestingBlock = rewardInfoCall.value.value9.toBigDecimal();
-    rewardInfo.endVestingBlock = rewardInfoCall.value.value10.toBigDecimal();
-    rewardInfo.numOfVestingBlocks = rewardInfoCall.value.value11.toBigDecimal();
+    rewardInfo.startVestingTime = rewardInfoCall.value.value9.toBigDecimal();
+    rewardInfo.endVestingTime = rewardInfoCall.value.value10.toBigDecimal();
+    rewardInfo.vestingDuration = rewardInfoCall.value.value11.toBigDecimal();
     rewardInfo.totalPaidRewards = tokenToDecimal(rewardInfoCall.value.value12.toBigDecimal(), rewardToken.decimals);
   }
   rewardInfo.save();
@@ -49,12 +49,12 @@ export function handleAddRewardPool(event: AddRewardPool): void {
 
 export function handleUpdateRewardPool(event: UpdateRewardPool): void {
   let rewardInfo = RewardInfo.load(event.address.toHexString() + event.params.poolId.toString());
-  rewardInfo.endRewardBlock = event.params.endRewardBlock.toBigDecimal();
+  rewardInfo.endRewardTime = event.params.endRewardTime.toBigDecimal();
   let rewardToken = Token.load(rewardInfo.rewardToken);
   if (rewardToken == null) {
     rewardToken = createTokenEntity(rewardInfo.rewardToken);
   }
-  rewardInfo.rewardPerBlock = tokenToDecimal(event.params.rewardPerBlock.toBigDecimal(), rewardToken.decimals);
+  rewardInfo.rewardPerSecond = tokenToDecimal(event.params.rewardPerSecond.toBigDecimal(), rewardToken.decimals);
   rewardInfo.save();
 }
 

@@ -78,15 +78,15 @@ type RewardInfo @entity {
   rewardToken: Token!
   rewardRebaserId : RewardRebaser
   rewardMultiplierId : RewardMultiplier
-  startRewardBlock : BigDecimal!
-  lastRewardBlock : BigDecimal!
-  endRewardBlock : BigDecimal!
-  rewardPerBlock : BigDecimal!
+  startRewardTime : BigDecimal!
+  lastRewardTime : BigDecimal!
+  endRewardTime : BigDecimal!
+  rewardPerSecond : BigDecimal!
   accRewardPerShare : BigDecimal!
   lockRewardPercent : BigDecimal!
-  startVestingBlock : BigDecimal!
-  endVestingBlock : BigDecimal!
-  numOfVestingBlocks : BigDecimal!
+  startVestingTime : BigDecimal!
+  endVestingTime : BigDecimal!
+  vestingDuration : BigDecimal!
   totalPaidRewards : BigDecimal!
 }
 

@@ -121,13 +121,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "endRewardBlock",
+        "name": "endRewardTime",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "rewardPerBlock",
+        "name": "rewardPerSecond",
         "type": "uint256"
       }
     ],
@@ -173,19 +173,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "BLOCKS_PER_DAY",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -204,17 +191,17 @@
       },
       {
         "internalType": "uint256",
-        "name": "_startBlock",
+        "name": "_startTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_endRewardBlock",
+        "name": "_endRewardTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_rewardPerBlock",
+        "name": "_rewardPerSecond",
         "type": "uint256"
       },
       {
@@ -224,12 +211,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_startVestingBlock",
+        "name": "_startVestingTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_endVestingBlock",
+        "name": "_endVestingTime",
         "type": "uint256"
       }
     ],
@@ -354,7 +341,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_rewardPerBlock",
+        "name": "_rewardPerSecond",
         "type": "uint256"
       }
     ],
@@ -375,9 +362,38 @@
         "internalType": "uint8",
         "name": "pid",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "from",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "to",
+        "type": "uint256"
       }
     ],
-    "name": "getRewardPerBlock",
+    "name": "getRewardPerSecond",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "pid",
+        "type": "uint8"
+      }
+    ],
+    "name": "getRewardPerSecond",
     "outputs": [
       {
         "internalType": "uint256",
@@ -553,22 +569,22 @@
       },
       {
         "internalType": "uint256",
-        "name": "startRewardBlock",
+        "name": "startRewardTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "lastRewardBlock",
+        "name": "lastRewardTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "endRewardBlock",
+        "name": "endRewardTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "rewardPerBlock",
+        "name": "rewardPerSecond",
         "type": "uint256"
       },
       {
@@ -583,17 +599,17 @@
       },
       {
         "internalType": "uint256",
-        "name": "startVestingBlock",
+        "name": "startVestingTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "endVestingBlock",
+        "name": "endVestingTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "numOfVestingBlocks",
+        "name": "vestingDuration",
         "type": "uint256"
       },
       {
@@ -655,6 +671,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_pid",
+        "type": "uint8"
+      }
+    ],
+    "name": "stopRewardPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -749,12 +778,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_endRewardBlock",
+        "name": "_endRewardTime",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_rewardPerBlock",
+        "name": "_rewardPerSecond",
         "type": "uint256"
       }
     ],
