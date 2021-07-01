@@ -5,6 +5,48 @@ schema:
   file: ./router.graphql
 dataSources:
   - kind: ethereum/contract
+    name: FactoryV2
+    network: {{network}}
+    source:
+      address: '{{liquidFactory.address}}'
+      abi: UFactory
+      startBlock: {{ liquidFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/router/factory.ts
+      entities:
+        - Exchange
+        - Pool
+      abis:
+        - name: UFactory
+          file: ../abis/factory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint32,uint32,uint256)
+          handler: handleNewPair
+  - kind: ethereum/contract
+    name: StableFactory
+    network: {{network}}
+    source:
+      address: '{{stableFactory.address}}'
+      abi: SwapFactory
+      startBlock: {{ stableFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/router/factory.ts
+      entities:
+        - Exchange
+        - Pool
+      abis:
+        - name: SwapFactory
+          file: ../abis/SwapFactory.json
+      eventHandlers:
+        - event: SwapCreated(address[],indexed address,uint256)
+          handler: handleNewStableSwap
+  - kind: ethereum/contract
     name: Router
     network: {{network}}
     source:
@@ -18,6 +60,30 @@ dataSources:
       file: ../src/router/router.ts
       entities:
         - RouterExchange
+        - Exchange
+        - Pool
+      abis:
+        - name: Router
+          file: ../abis/LiquidRouter.json
+      eventHandlers:
+        - event: Exchange(address,uint256,address)
+          handler: handleExchange
+  - kind: ethereum/contract
+    name: RouterV2
+    network: {{network}}
+    source:
+      address: '{{routerV2.address}}'
+      abi: Router
+      startBlock: {{routerV2.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/router/router.ts
+      entities:
+        - RouterExchange
+        - Exchange
+        - Pool
       abis:
         - name: Router
           file: ../abis/LiquidRouter.json

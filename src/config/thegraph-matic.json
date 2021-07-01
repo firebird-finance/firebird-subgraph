@@ -16,6 +16,11 @@
     "startBlock": "15143906"
   },
 
+  "routerV2": {
+    "address": "0x6466CDC2615f111dc6Dbd0Ef6fDD209F5Ff8d184",
+    "startBlock": "16118474"
+  },
+
   "stakePoolController": {
     "address": "0xbadc009227A5Fe0b423B994669Dd68D0D3Cc722c",
     "startBlock": "15730539"

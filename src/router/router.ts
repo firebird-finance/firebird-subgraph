@@ -1,4 +1,4 @@
-import {RouterExchange} from "../types/router/schema";
+import {RouterExchange, Pool} from "../types/router/schema";
 import {Exchange} from "../types/router/Router/Router";
 
 export function handleExchange(event: Exchange): void {
@@ -7,7 +7,10 @@ export function handleExchange(event: Exchange): void {
     .concat("-")
     .concat(event.logIndex.toString());
 
+  let pool = Pool.load(event.params.pair.toHexString());
+
   let swapExchange = new RouterExchange(id);
+  swapExchange.isInPlatform = pool != null;
   swapExchange.pair = event.params.pair;
   swapExchange.token = event.params.output;
   swapExchange.amount = event.params.amountOut.toBigDecimal();

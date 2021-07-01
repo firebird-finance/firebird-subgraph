@@ -1,6 +1,7 @@
 type RouterExchange @entity {
   id: ID!                                             # txn hash + log index
   pair: Bytes!
+  isInPlatform: Boolean
   token: Bytes!
   amount: BigDecimal!
   userAddress: Bytes!
@@ -9,3 +10,15 @@ type RouterExchange @entity {
   tx: Bytes!
 }
 
+type Exchange @entity {
+  id: ID!
+  poolCount: Int!                                     # Number of pools
+  pools: [Pool!] @derivedFrom(field: "exchangeID")
+}
+
+type Pool @entity {
+  id: ID!                                             # Pool address
+  version: Int!
+  exchangeID: Exchange!
+  tokensList: [Bytes!]!                               # Temp workaround until graph supports filtering on derived field
+}
