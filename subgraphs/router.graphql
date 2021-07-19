@@ -2,6 +2,7 @@ type RouterExchange @entity {
   id: ID!                                             # txn hash + log index
   pair: Bytes!
   isInPlatform: Boolean
+  version: Int!
   token: Bytes!
   amount: BigDecimal!
   userAddress: Bytes!

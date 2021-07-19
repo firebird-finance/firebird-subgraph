@@ -67,7 +67,7 @@ dataSources:
           file: ../abis/LiquidRouter.json
       eventHandlers:
         - event: Exchange(address,uint256,address)
-          handler: handleExchange
+          handler: handleExchangeV1
   - kind: ethereum/contract
     name: RouterV2
     network: {{network}}
@@ -89,4 +89,4 @@ dataSources:
           file: ../abis/LiquidRouter.json
       eventHandlers:
         - event: Exchange(address,uint256,address)
-          handler: handleExchange
+          handler: handleExchangeV2
