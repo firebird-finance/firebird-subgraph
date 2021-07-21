@@ -1,0 +1,28 @@
+{
+  "network": "kcc",
+
+  "liquidFactory": {
+    "address": "0x5De74546d3B86C8Df7FEEc30253865e1149818C8",
+    "startBlock": "1173200"
+  },
+
+  "stableFactory": {
+    "address": "0xD2891F9a9fDBFfC2DB3Ec9D4194409a7678CBc51",
+    "startBlock": "1173266"
+  },
+
+  "router": {
+    "address": "0x4BFBf7fCC9776CE8285B059fB77e7Bb2A5c5E365",
+    "startBlock": "1173206"
+  },
+
+  "routerV2": {
+    "address": "0x6466CDC2615f111dc6Dbd0Ef6fDD209F5Ff8d184",
+    "startBlock": "1173206"
+  },
+
+  "stakePoolController": {
+    "address": "0xbadc009227A5Fe0b423B994669Dd68D0D3Cc722c",
+    "startBlock": "1173229"
+  }
+}
