@@ -14,10 +14,11 @@ export let HOPE: string = "0xd78c475133731cd54dadcb430f7aae4f03c1e660";
 export let USD: string = "0x980a5afef3d17ad98635f6c5aebcbaeded3c3430"; // USDC
 export let USDT: string = "0x0039f574ee5cc39bdd162e9a88e3eb1f111baf48"; // USDT
 export let DAI: string = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; // DAI
+export let BUSD: string = "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d"; // BUSD
 export let KCS: string = "0x4446fc4eb47f2f6586f9faab68b3498f86c07521";
-export let WETH: string = "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619";
-export let STABLES: string[] = [DAI, USD, USDT];
-export let WHITELIST: string[] = [HOPE, WETH, KCS, DAI, USD, USDT];
+export let WETH: string = "0xf55af137a98607f7ed2efefa4cd2dfe70e4253b1";
+export let STABLES: string[] = [BUSD, DAI, USD, USDT];
+export let WHITELIST: string[] = [HOPE, WETH, KCS, BUSD, DAI, USD, USDT];
 export let SAVE_SWAP_FROM = BigInt.fromI32(0);
 export function getExchange(id: string): Exchange | null {
   let factory = Exchange.load(id);
@@ -166,7 +167,7 @@ export function createTokenEntity(address: string): Token | null {
     token.symbol = symbol;
     token.decimals = decimals;
     token.poolTokenId = "";
-    token.priceUSD = address == USD || address == DAI || address == USDT ? ONE_BD : ZERO_BD;
+    token.priceUSD = address == USD || address == DAI || address == USDT || address == BUSD ? ONE_BD : ZERO_BD;
     token.poolLiquidity = ZERO_BD;
     token.totalLiquidity = ZERO_BD;
     token.tradeVolume = ZERO_BD;
@@ -247,6 +248,12 @@ export function updatePoolLiquidity(pool: Pool): void {
     hasUsdPrice = true;
   } else if (tokensList.includes(Address.fromString(USDT))) {
     let usdPoolTokenId = id.concat("-").concat(USDT);
+    let usdPoolToken = PoolToken.load(usdPoolTokenId);
+    poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
+    hasPrice = true;
+    hasUsdPrice = true;
+  } else if (tokensList.includes(Address.fromString(BUSD))) {
+    let usdPoolTokenId = id.concat("-").concat(BUSD);
     let usdPoolToken = PoolToken.load(usdPoolTokenId);
     poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
     hasPrice = true;
