@@ -319,23 +319,25 @@ export function updatePoolLiquidity(pool: Pool): void {
     poolTokens.push(poolToken!);
     tokens.push(token!);
   }
-  if (liquidity.gt(MIN_LIQUIDITY_BD)) {
+
     for (let i = 0; i < poolTokens.length; i++) {
       let poolToken = poolTokens[i];
       let token = tokens[i];
-      let reserveUsd = liquidity.div(poolInfo.totalWeight).times(poolToken.denormWeight);
-      token.totalLiquidity = token.totalLiquidity.minus(poolToken.reserveUSD).plus(reserveUsd);
-      poolToken.reserveUSD = reserveUsd;
-      if (poolToken.balance.gt(ZERO_BD)) {
-        poolToken.priceUSD = reserveUsd.div(poolToken.balance);
-        if (token.priceUSD.equals(ZERO_BD) || token.poolLiquidity.equals(ZERO_BD) || token.poolTokenId == poolToken.id) {
-          token.priceUSD = poolToken.priceUSD;
-          token.poolLiquidity = poolLiquidity.equals(ZERO_BD) ? ZERO_BD : reserveUsd;
-          token.poolTokenId = poolToken.id;
+      if (liquidity.gt(MIN_LIQUIDITY_BD) || token.poolTokenId == poolToken.id) {
+        let reserveUsd = liquidity.div(poolInfo.totalWeight).times(poolToken.denormWeight);
+        token.totalLiquidity = token.totalLiquidity.minus(poolToken.reserveUSD).plus(reserveUsd);
+        poolToken.reserveUSD = reserveUsd;
+        if (poolToken.balance.gt(ZERO_BD)) {
+          poolToken.priceUSD = reserveUsd.div(poolToken.balance);
+          if (token.priceUSD.equals(ZERO_BD) || token.poolLiquidity.equals(ZERO_BD) || token.poolTokenId == poolToken.id) {
+            token.priceUSD = poolToken.priceUSD;
+            token.poolLiquidity = poolLiquidity.equals(ZERO_BD) ? ZERO_BD : reserveUsd;
+            token.poolTokenId = poolToken.id;
+          }
         }
+        token.save();
+        poolToken.save();
       }
-      token.save();
-      poolToken.save();
     }
   }
   let factory = getExchange(poolInfo.exchangeID);
