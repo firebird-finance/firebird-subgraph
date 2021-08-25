@@ -7,7 +7,7 @@ export let ZERO_BD = BigDecimal.fromString("0");
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
 export let ONE_BD = BigDecimal.fromString("1");
-export let MIN_LIQUIDITY_BD = BigDecimal.fromString("1");
+export let MIN_LIQUIDITY_BD = BigDecimal.fromString("500");
 export let MIN_RESERVE_UPDATE_BD = BigDecimal.fromString("10");
 
 export let HOPE: string = "0xd78c475133731cd54dadcb430f7aae4f03c1e660";
@@ -327,10 +327,10 @@ export function updatePoolLiquidity(pool: Pool): void {
     poolTokens.push(poolToken!);
     tokens.push(token!);
   }
-  if (liquidity.gt(MIN_LIQUIDITY_BD)) {
-    for (let i = 0; i < poolTokens.length; i++) {
-      let poolToken = poolTokens[i];
-      let token = tokens[i];
+  for (let i = 0; i < poolTokens.length; i++) {
+    let poolToken = poolTokens[i];
+    let token = tokens[i];
+    if (liquidity.gt(MIN_LIQUIDITY_BD) || token.poolTokenId == poolToken.id) {
       let reserveUsd = liquidity.div(poolInfo.totalWeight).times(poolToken.denormWeight);
       token.totalLiquidity = token.totalLiquidity.minus(poolToken.reserveUSD).plus(reserveUsd);
       poolToken.reserveUSD = reserveUsd;

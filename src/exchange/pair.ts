@@ -141,11 +141,7 @@ export function handleSwap(event: Swap): void {
   let token0 = Token.load(address0);
   let token1 = Token.load(address1);
   let amount0In = tokenToDecimal(event.params.amount0In.toBigDecimal(), token0.decimals);
-  let collectedToken0Fund = token0.priceUSD.times(amount0In).times(factory.protocolFee).times(poolInfo.swapFee);
   let amount1In = tokenToDecimal(event.params.amount1In.toBigDecimal(), token1.decimals);
-  let collectedToken1Fund = token1.priceUSD.times(amount1In).times(factory.protocolFee).times(poolInfo.swapFee);
-  let totalProtocolFee = collectedToken0Fund.plus(collectedToken1Fund);
-
   let amount0Out = tokenToDecimal(event.params.amount0Out.toBigDecimal(), token0.decimals);
   let amount1Out = tokenToDecimal(event.params.amount1Out.toBigDecimal(), token1.decimals);
 
@@ -160,6 +156,9 @@ export function handleSwap(event: Swap): void {
   let swap2Value = getTrackedVolumeUSD(amount1Out, token1!, amount0In, token0!);
   let swapValue = swap1Value.plus(swap2Value);
   let swapFeeValue = swapValue.times(poolInfo.swapFee);
+  let collectedToken0Fund = swap2Value.times(factory.protocolFee).times(poolInfo.swapFee);
+  let collectedToken1Fund = swap1Value.times(factory.protocolFee).times(poolInfo.swapFee);
+  let totalProtocolFee = collectedToken0Fund.plus(collectedToken1Fund);
   totalSwapVolume = totalSwapVolume.plus(swapValue);
   totalSwapFee = totalSwapFee.plus(swapFeeValue);
 
