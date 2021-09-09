@@ -1,0 +1,20 @@
+type SwapReward @entity {
+  id: ID!                                             # txn hash + log index
+  userAddress: Bytes!
+  inputToken: Bytes!
+  outputToken: Bytes!
+  outputAmount: BigDecimal!
+  rewardAmount: BigDecimal!
+  time: BigInt,
+  blockNumber: BigInt,
+  tx: Bytes!
+}
+
+type WithdrawReward @entity {
+  id: ID!
+  userAddress: Bytes!
+  rewardAmount: BigDecimal!
+  time: BigInt,
+  blockNumber: BigInt,
+  tx: Bytes!
+}

@@ -1,0 +1,29 @@
+specVersion: 0.0.2
+description: SwapReward
+repository: https://github.com/firebird-finance/firebird-subgraph
+schema:
+  file: ./swapReward.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SwapReward
+    network: {{network}}
+    source:
+      address: '{{swapReward.address}}'
+      abi: SwapReward
+      startBlock: {{swapReward.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/swapReward/swapReward.ts
+      entities:
+        - SwapReward
+        - WithdrawReward
+      abis:
+        - name: SwapReward
+          file: ../abis/SwapFeeReward.json
+      eventHandlers:
+        - event: Rewarded(address,address,address,uint256,uint256)
+          handler: handleRewarded
+        - event: Withdraw(address,uint256)
+          handler: handleWithdraw
