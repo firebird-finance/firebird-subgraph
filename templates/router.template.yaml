@@ -25,6 +25,7 @@ dataSources:
       eventHandlers:
         - event: PairCreated(indexed address,indexed address,address,uint32,uint32,uint256)
           handler: handleNewPair
+  {{#stableFactory}}
   - kind: ethereum/contract
     name: StableFactory
     network: {{network}}
@@ -46,6 +47,8 @@ dataSources:
       eventHandlers:
         - event: SwapCreated(address[],indexed address,uint256)
           handler: handleNewStableSwap
+  {{/stableFactory}}
+  {{#router}}
   - kind: ethereum/contract
     name: Router
     network: {{network}}
@@ -68,6 +71,7 @@ dataSources:
       eventHandlers:
         - event: Exchange(address,uint256,address)
           handler: handleExchangeV1
+  {{/router}}
   - kind: ethereum/contract
     name: RouterV2
     network: {{network}}

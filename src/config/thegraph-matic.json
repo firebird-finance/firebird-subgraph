@@ -24,5 +24,10 @@
   "stakePoolController": {
     "address": "0xbadc009227A5Fe0b423B994669Dd68D0D3Cc722c",
     "startBlock": "15730539"
+  },
+
+  "swapReward": {
+    "address": "0x1ed884546bd32D7dFE23343c626fD307b3Df1E17",
+    "startBlock": "18613188"
   }
 }

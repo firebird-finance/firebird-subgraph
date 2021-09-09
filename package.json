@@ -26,6 +26,11 @@
     "thegraph:timelock:deploy": "graph deploy firebirdgraph/polygon-timelock subgraphs/timelock.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "bscgraph:timelock:deploy": "graph deploy firebird/timelock subgraphs/timelock.bscgraph.yaml --ipfs https://ipfs.infura.io:5001/ --node https://api.bscgraph.org/deploy/",
 
+    "thegraph:swapReward:mustache": "mustache src/config/thegraph-matic.json templates/swapReward.template.yaml > subgraphs/swapReward.thegraph.yaml",
+    "swapReward:codegen": "graph codegen subgraphs/swapReward.thegraph.yaml --output-dir src/types/swapReward",
+    "swapReward:build": "graph build subgraphs/swapReward.thegraph.yaml",
+    "thegraph:swapReward:deploy": "graph deploy firebirdgraph/polygon-fee-reward subgraphs/swapReward.thegraph.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+
     "create:local": "graph create firebird/exchange-local --node http://127.0.0.1:8022",
     "deploy:local": "graph deploy firebird/exchange-local subgraph.bsctestnet.yaml --debug --ipfs http://localhost:5002 --node http://127.0.0.1:8022",
     "create-bscgraph": "graph create firebird/exchange --node https://api.bscgraph.org/deploy/"
