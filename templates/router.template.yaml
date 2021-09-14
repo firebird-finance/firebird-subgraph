@@ -94,3 +94,27 @@ dataSources:
       eventHandlers:
         - event: Exchange(address,uint256,address)
           handler: handleExchangeV2
+  {{#routerV3}}
+  - kind: ethereum/contract
+    name: RouterV3
+    network: {{network}}
+    source:
+      address: '{{routerV3.address}}'
+      abi: Router
+      startBlock: {{routerV3.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ../src/router/router.ts
+      entities:
+        - RouterExchange
+        - Exchange
+        - Pool
+      abis:
+        - name: Router
+          file: ../abis/LiquidRouter.json
+      eventHandlers:
+        - event: Exchange(address,uint256,address)
+          handler: handleExchangeV3
+  {{/routerV3}}
