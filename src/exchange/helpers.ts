@@ -12,12 +12,12 @@ export let MIN_RESERVE_UPDATE_BD = BigDecimal.fromString("10");
 
 export let HOPE: string = "0xd78c475133731cd54dadcb430f7aae4f03c1e660";
 export let USD: string = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"; // USDC
-export let USDT: string = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"; // USDT
-export let DAI: string = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; // DAI
-export let MATIC: string = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
-export let WETH: string = "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619";
+export let USDT: string = "0xde3a24028580884448a5397872046a019649b084"; // USDT
+export let DAI: string = "0xba7deebbfc5fa1100fb055a87773e1e99cd3507a"; // DAI
+export let WAVAX: string = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7";
+export let WETH: string = "0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15";
 export let STABLES: string[] = [DAI, USD, USDT];
-export let WHITELIST: string[] = [HOPE, WETH, MATIC, DAI, USD, USDT];
+export let WHITELIST: string[] = [HOPE, WETH, WAVAX, DAI, USD, USDT];
 export let SAVE_SWAP_FROM = BigInt.fromI32(0);
 export function getExchange(id: string): Exchange | null {
   let factory = Exchange.load(id);
@@ -251,10 +251,10 @@ export function updatePoolLiquidity(pool: Pool): void {
     poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
     hasPrice = true;
     hasUsdPrice = true;
-  } else if (tokensList.includes(Address.fromString(MATIC))) {
-    let maticToken = Token.load(MATIC);
+  } else if (tokensList.includes(Address.fromString(WAVAX))) {
+    let maticToken = Token.load(WAVAX);
     if (maticToken !== null && maticToken.priceUSD.gt(ZERO_BD)) {
-      let poolTokenId = id.concat("-").concat(MATIC);
+      let poolTokenId = id.concat("-").concat(WAVAX);
       let poolToken = PoolToken.load(poolTokenId);
       poolLiquidity = maticToken.priceUSD
         .times(poolToken.balance)
@@ -291,7 +291,7 @@ export function updatePoolLiquidity(pool: Pool): void {
   let denormWeight = ZERO_BD;
 
   let poolTokens: Array<PoolToken> = [];
-  let isPoolMaticStable = tokensList.includes(Address.fromString(MATIC)) && tokensList.includes(Address.fromString(USD)); //only update MATIC by pool MATIC-USDC
+  let isPoolMaticStable = tokensList.includes(Address.fromString(WAVAX)) && tokensList.includes(Address.fromString(USD)); //only update WAVAX by pool WAVAX-USDC
   let isPoolWETHStable = tokensList.includes(Address.fromString(WETH)) && tokensList.includes(Address.fromString(USD)); //only update WETH by pool WETH-USDC
   let tokens: Array<Token> = [];
   for (let i: i32 = 0; i < tokensList.length; i++) {
@@ -302,7 +302,7 @@ export function updatePoolLiquidity(pool: Pool): void {
     if (hasPrice) {
       if (token.poolTokenId == poolTokenId || poolLiquidity.gt(token.poolLiquidity)) {
         if (
-          (tokenId != MATIC.toString() || (tokenId == MATIC.toString() && isPoolMaticStable)) &&
+          (tokenId != WAVAX.toString() || (tokenId == WAVAX.toString() && isPoolMaticStable)) &&
           (tokenId != WETH.toString() || (tokenId == WETH.toString() && isPoolWETHStable))
         ) {
           if (poolLiquidity.gt(MIN_LIQUIDITY_BD)) {

@@ -1,0 +1,14 @@
+{
+  "network": "avalanche",
+
+  "liquidFactory": {
+    "address": "0xc7A50FE12C864963Ea5A5E0858a0E7Abe5b875c4",
+    "startBlock": "4633595"
+  },
+
+  "routerV2": {
+    "address": "0xe0C38b2a8D09aAD53f1C67734B9A95E43d5981c0",
+    "startBlock": "4634166"
+  }
+
+}
