@@ -26,6 +26,7 @@ dataSources:
       eventHandlers:
         - event: MasterCreated(indexed address,indexed address,uint256,address,address,uint256)
           handler: handleMasterCreated
+  {{#stableFactory}}
   - kind: ethereum/contract
     name: StableFactory
     network: {{network}}
@@ -50,6 +51,7 @@ dataSources:
       eventHandlers:
         - event: SwapCreated(address[],indexed address,uint256)
           handler: handleNewStableSwap
+  {{/stableFactory}}
 templates:
   - kind: ethereum/contract
     name: Timelock

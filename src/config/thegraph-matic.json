@@ -21,13 +21,18 @@
     "startBlock": "16118474"
   },
 
+  "routerV3": {
+    "address": "0xb31D1B1eA48cE4Bf10ed697d44B747287E785Ad4",
+    "startBlock": "18582548"
+  },
+
   "stakePoolController": {
     "address": "0xbadc009227A5Fe0b423B994669Dd68D0D3Cc722c",
     "startBlock": "15730539"
   },
 
   "swapReward": {
-    "address": "0x1ed884546bd32D7dFE23343c626fD307b3Df1E17",
-    "startBlock": "18613188"
+    "address": "0x5ADA95d0FCd624A1B3339EAa0dD8C57ddfA31Bb6",
+    "startBlock": "19199773"
   }
 }
