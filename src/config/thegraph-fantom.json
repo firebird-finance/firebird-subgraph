@@ -9,6 +9,10 @@
   "routerV2": {
     "address": "0xe0C38b2a8D09aAD53f1C67734B9A95E43d5981c0",
     "startBlock": "16731360"
-  }
+  },
 
+  "stakePoolController": {
+    "address": "0x5De74546d3B86C8Df7FEEc30253865e1149818C8",
+    "startBlock": "18561532"
+  }
 }
