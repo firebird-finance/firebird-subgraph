@@ -1,16 +1,16 @@
 import {RouterExchange, Pool} from "../types/router/schema";
 import {Exchange} from "../types/router/Router/Router";
 
-export function handleExchangeV3(event: Exchange): void {
-  handleExchange(event, 1);
+export function handleExchangeV1(event: Exchange): void {
+  handleExchange(event, 0);
 }
 
 export function handleExchangeV2(event: Exchange): void {
-  handleExchange(event, 2);
+  handleExchange(event, 1);
 }
 
-export function handleExchangeV1(event: Exchange): void {
-  handleExchange(event, 0);
+export function handleExchangeV3(event: Exchange): void {
+  handleExchange(event, 2);
 }
 
 function handleExchange(event: Exchange, version: i32): void {
