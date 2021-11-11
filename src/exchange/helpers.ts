@@ -11,13 +11,14 @@ export let MIN_LIQUIDITY_BD = BigDecimal.fromString("500");
 export let MIN_RESERVE_UPDATE_BD = BigDecimal.fromString("10");
 
 export let HOPE: string = "0xd78c475133731cd54dadcb430f7aae4f03c1e660";
-export let USD: string = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"; // USDC
-export let USDT: string = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"; // USDT
-export let DAI: string = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; // DAI
-export let MATIC: string = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
-export let WETH: string = "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619";
-export let STABLES: string[] = [DAI, USD, USDT];
-export let WHITELIST: string[] = [HOPE, WETH, MATIC, DAI, USD, USDT];
+export let USD: string = "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d"; // USDC
+export let USDT: string = "0xb44a9b6905af7c801311e8f4e76932ee959c663c"; // USDT
+export let DAI: string = "0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844"; // DAI
+export let BUSD: string = "0x5d9ab5522c64e1f6ef5e3627eccc093f56167818"; // BUSD
+export let WMOVR: string = "0x98878b06940ae243284ca214f92bb71a2b032b8a";
+export let WETH: string = "0x639a647fbe20b6c8ac19e48e2de44ea792c62c5c";
+export let STABLES: string[] = [BUSD, DAI, USD, USDT];
+export let WHITELIST: string[] = [HOPE, WETH, WMOVR, BUSD, DAI, USD, USDT];
 export let SAVE_SWAP_FROM = BigInt.fromI32(0);
 export function getExchange(id: string): Exchange | null {
   let factory = Exchange.load(id);
@@ -166,7 +167,7 @@ export function createTokenEntity(address: string): Token | null {
     token.symbol = symbol;
     token.decimals = decimals;
     token.poolTokenId = "";
-    token.priceUSD = address == USD || address == DAI || address == USDT ? ONE_BD : ZERO_BD;
+    token.priceUSD = address == USD || address == DAI || address == USDT|| address == BUSD ? ONE_BD : ZERO_BD;
     token.poolLiquidity = ZERO_BD;
     token.totalLiquidity = ZERO_BD;
     token.tradeVolume = ZERO_BD;
@@ -251,10 +252,16 @@ export function updatePoolLiquidity(pool: Pool): void {
     poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
     hasPrice = true;
     hasUsdPrice = true;
-  } else if (tokensList.includes(Address.fromString(MATIC))) {
-    let maticToken = Token.load(MATIC);
+  } else if (tokensList.includes(Address.fromString(BUSD))) {
+    let usdPoolTokenId = id.concat("-").concat(BUSD);
+    let usdPoolToken = PoolToken.load(usdPoolTokenId);
+    poolLiquidity = usdPoolToken.balance.div(usdPoolToken.denormWeight).times(poolInfo.totalWeight);
+    hasPrice = true;
+    hasUsdPrice = true;
+  } else if (tokensList.includes(Address.fromString(WMOVR))) {
+    let maticToken = Token.load(WMOVR);
     if (maticToken !== null && maticToken.priceUSD.gt(ZERO_BD)) {
-      let poolTokenId = id.concat("-").concat(MATIC);
+      let poolTokenId = id.concat("-").concat(WMOVR);
       let poolToken = PoolToken.load(poolTokenId);
       poolLiquidity = maticToken.priceUSD
         .times(poolToken.balance)
@@ -291,7 +298,7 @@ export function updatePoolLiquidity(pool: Pool): void {
   let denormWeight = ZERO_BD;
 
   let poolTokens: Array<PoolToken> = [];
-  let isPoolMaticStable = tokensList.includes(Address.fromString(MATIC)) && tokensList.includes(Address.fromString(USD)); //only update MATIC by pool MATIC-USDC
+  let isPoolMaticStable = tokensList.includes(Address.fromString(WMOVR)) && tokensList.includes(Address.fromString(USD)); //only update MATIC by pool MATIC-USDC
   let isPoolWETHStable = tokensList.includes(Address.fromString(WETH)) && tokensList.includes(Address.fromString(USD)); //only update WETH by pool WETH-USDC
   let tokens: Array<Token> = [];
   for (let i: i32 = 0; i < tokensList.length; i++) {
@@ -302,7 +309,7 @@ export function updatePoolLiquidity(pool: Pool): void {
     if (hasPrice) {
       if (token.poolTokenId == poolTokenId || poolLiquidity.gt(token.poolLiquidity)) {
         if (
-          (tokenId != MATIC.toString() || (tokenId == MATIC.toString() && isPoolMaticStable)) &&
+          (tokenId != WMOVR.toString() || (tokenId == WMOVR.toString() && isPoolMaticStable)) &&
           (tokenId != WETH.toString() || (tokenId == WETH.toString() && isPoolWETHStable))
         ) {
           if (poolLiquidity.gt(MIN_LIQUIDITY_BD)) {

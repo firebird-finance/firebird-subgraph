@@ -1,0 +1,14 @@
+{
+  "network": "moonriver",
+
+  "liquidFactory": {
+    "address": "0xc7A50FE12C864963Ea5A5E0858a0E7Abe5b875c4",
+    "startBlock": "618859"
+  },
+
+  "routerV3": {
+    "address": "0xe0C38b2a8D09aAD53f1C67734B9A95E43d5981c0",
+    "startBlock": "618910"
+  }
+
+}
