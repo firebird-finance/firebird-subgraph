@@ -1,0 +1,23 @@
+{
+  "network": "iotex",
+
+  "liquidFactory": {
+    "address": "0xEf7E3401f70aE2e49E3D2af0A30d2978A059cd7b",
+    "startBlock": "14208531"
+  },
+
+  "stableFactory": {
+    "address": "0x2E4062296B01972a669c5724250636E125797CeF",
+    "startBlock": "14208615"
+  },
+
+  "routerV3": {
+    "address": "0x4d0575479d78e628885ac77a2048863B6DF9712D",
+    "startBlock": "14209452"
+  },
+
+  "stakePoolController": {
+    "address": "0x9cADCb79170D074ba2eD5C4680C4Bc9180ab0bf2",
+    "startBlock": "14208574"
+  }
+}
